@@ -2,6 +2,7 @@ import { useState } from "react";
 import Alert from "./components/Alert";
 import Button from "./components/Button";
 import ListGroup from "./components/ListGroup";
+import Like from "./components/Like";
 
 function App() {
   let items = ["London", "New York", "Sydney", "Tokyo", "Paris"];
@@ -32,6 +33,9 @@ function App() {
           React<span className="fw-bold"> App</span>
         </Alert>
       )}
+      <div className="container mt-4">
+        <Like />
+      </div>
     </div>
   );
 }
