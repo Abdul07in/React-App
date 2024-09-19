@@ -6,11 +6,7 @@ interface AlertProps {
 
 const Alert = ({ children, visible, onClose }: AlertProps) => {
   return (
-    <div
-      className={`mt-4 alert alert-warning alert-dismissible fade ${
-        visible ? "show" : "show"
-      }`}
-    >
+    <div className={`mt-4 alert alert-warning alert-dismissible fade show`}>
       <strong>{children}</strong>
       <button
         type="button"
