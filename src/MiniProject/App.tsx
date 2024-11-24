@@ -3,23 +3,31 @@ import ExpenseForm from "./ExpenseForm";
 import ExpenseList from "./ExpenseList";
 import ExpenseFilter from "./ExpenseFilter";
 
-const App = () => {
-  const [selectedCategory, setSelectedCategory] = useState("");
+// Define a type for expenses
+interface Expense {
+  id: number;
+  description: string;
+  amount: number;
+  category: string;
+}
 
-  const [expenses, setExpenses] = useState([
-    { id: -1, description: "ddd", amount: 10, category: "Entertainment" },
-  ]);
+const App: React.FC = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [expenses, setExpenses] = useState<Expense[] | null>(null); // Use the type here
 
   const visibleExpenses = selectedCategory
-    ? expenses.filter((e) => e.category === selectedCategory)
-    : expenses.filter((e) => e.id !== -1);
+    ? expenses?.filter((e) => e.category === selectedCategory)
+    : expenses;
 
   return (
     <>
       <div className="mb-3">
         <ExpenseForm
           onSubmit={(expense) =>
-            setExpenses([...expenses, { ...expense, id: expenses.length + 1 }])
+            setExpenses((prev) => [
+              ...(prev || []),
+              { ...expense, id: (prev?.length || 0) + 1 },
+            ])
           }
         />
       </div>
@@ -31,7 +39,7 @@ const App = () => {
       <ExpenseList
         expenses={visibleExpenses}
         onDelete={(id) => {
-          setExpenses(expenses.filter((e) => e.id !== id));
+          setExpenses((prev) => (prev || []).filter((e) => e.id !== id));
         }}
       />
     </>

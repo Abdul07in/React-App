@@ -7,12 +7,15 @@ import Form from "./components/Forms/Form";
 import "./index.css";
 import ExpenseCalculator from "./MiniProject/ExpenseCalculator";
 import App from "./MiniProject/App";
+import AppEffects from "./EffectHooksReact/components/AppEffects";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     {/* <App /> */}
     {/* <Form /> */}
     {/* <ExpenseCalculator /> */}
-    <App />
+    {/* <App /> */}
+
+    <AppEffects />
   </React.StrictMode>
 );
