@@ -1,25 +1,18 @@
-import React, { useEffect, useState } from "react";
-import axios, { AxiosError, CanceledError } from "axios";
-
-interface User {
-  id: number;
-  name: string;
-}
+import { useEffect, useState } from "react";
+import { CanceledError } from "../services/api-client";
+import userService, { User } from "../services/user-service";
 
 const AppEffects = () => {
-  const BASEURL = "https://jsonplaceholder.typicode.com";
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController();
     setIsLoading(true);
-    axios
-      .get<User[]>(`${BASEURL}/users`, { signal: controller.signal })
+    const { request, cancel } = userService.getAllUser();
+    request
       .then((res) => {
         setUsers(res.data);
-        // console.log(res);
         setError("");
         setIsLoading(false);
       })
@@ -28,15 +21,13 @@ const AppEffects = () => {
         setError(err.message);
       });
 
-    return () => {
-      controller.abort();
-    };
+    return () => cancel();
   }, []);
 
   const deleteUser = (user: User) => {
     const originalUsers = [...users];
     setUsers(users.filter((u) => u.id !== user.id));
-    axios.delete(`${BASEURL}/users/${user.id}`).catch((err) => {
+    userService.deleteUser(user.id).catch((err) => {
       setError(err.message);
       setUsers(originalUsers);
     });
@@ -46,8 +37,8 @@ const AppEffects = () => {
     const originalUsers = [...users];
     const newUser = { id: 0, name: "Majeed Kanoor" };
     setUsers([...users, newUser]);
-    axios
-      .post(`${BASEURL}/users`, newUser)
+    userService
+      .createUser(newUser)
       .then(({ data: savedUser }) => {
         setUsers([...users, savedUser]);
       })
@@ -61,8 +52,7 @@ const AppEffects = () => {
     const originalUsers = [...users];
     const updatedUser = { ...user, name: user.name + " 😀 !" };
     setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
-
-    axios.patch(`${BASEURL}/users/${user.id}`, updateUser).catch((err) => {
+    userService.updateUser(updatedUser).catch((err) => {
       setError(err.message);
       setUsers(originalUsers);
     });
